@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController
 {
     protected $calculator;
+
     public function __construct(Calculator $calculator)
     {
         $this->calculator = $calculator;
