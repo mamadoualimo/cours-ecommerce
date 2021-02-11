@@ -25,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -69,8 +70,18 @@ class ProductController extends AbstractController
      * @Route("/admin/product/{id}/edit", name="product_edit")
      */
     public function edit($id, ProductRepository $productRepository, Request
-    $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator)
+    $request, EntityManagerInterface $em, ValidatorInterface $validator)
     {
+        // $product = new Product;
+
+        // $resultat = $validator->validate($product);
+
+        // if ($resultat->count() > 0) {
+        //     dd("Il y a des erreurs ", $resultat);
+        // }
+
+        // dd("Tout va bien");
+
         $product = $productRepository->find($id);
 
         $form = $this->createForm(ProductType::class, $product);
@@ -79,7 +90,7 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
             // $response = new Response();
@@ -115,7 +126,7 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $product->setSlug(strtolower($slugger->slug($product->getName())));
 
             $em->persist($product);
