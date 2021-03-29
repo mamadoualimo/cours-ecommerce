@@ -16,12 +16,19 @@ class CartService
         $this->productRepository = $productRepository;
     }
 
-    protected function getCart() : array {
+    protected function getCart(): array
+    {
         return $this->session->get('cart', []);
     }
 
-    protected function saveCart(array $cart) {
+    protected function saveCart(array $cart)
+    {
         $this->session->set('cart', $cart);
+    }
+
+    public function empty()
+    {
+        $this->saveCart([]);
     }
 
     public function add(int $id)
@@ -37,9 +44,9 @@ class CartService
         // 5. Sinon, ajouter le produit avec la qualité
         if (!array_key_exists($id, $cart)) {
             $cart[$id] = 0;
-        } 
-            $cart[$id]++;
-        
+        }
+        $cart[$id]++;
+
         // 6. Enregistrer le tableau mis à jour dans la session
         $this->saveCart($cart);
     }
@@ -53,10 +60,11 @@ class CartService
         $this->saveCart($cart);
     }
 
-    public function decrement(int $id) {
+    public function decrement(int $id)
+    {
         $cart = $this->getCart();
 
-        if(!array_key_exists($id, $cart)) {
+        if (!array_key_exists($id, $cart)) {
             return;
         }
 
@@ -88,6 +96,10 @@ class CartService
 
         return $total;
     }
+
+    /**
+     * @return CartItem[]
+     */
 
     public function getDetailedCartItems(): array
     {

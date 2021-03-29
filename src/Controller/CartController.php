@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Cart\CartService;
+use App\Form\CartConfirmationType;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,12 +17,12 @@ class CartController extends AbstractController
 {
     /**
      * @var ProductRepository
-    */
+     */
     protected $productRepository;
 
     /**
      * @var CartService
-    */
+     */
     protected $cartService;
 
     public function __construct(ProductRepository $productRepository, CartService $cartService)
@@ -58,7 +59,7 @@ class CartController extends AbstractController
         $this->addFlash('success', "Le produit a bien été ajouté au panier");
         // $flashBag->add('success', "Le produit a bien été ajouté au panier");
 
-        if($request->query->get('returnToCart')) {
+        if ($request->query->get('returnToCart')) {
             return $this->redirectToRoute("cart_show");
         }
 
@@ -73,13 +74,15 @@ class CartController extends AbstractController
      */
     public function show()
     {
+        $form = $this->createForm(CartConfirmationType::class);
         $detailedCart = $this->cartService->getDetailedCartItems();
 
         $total = $this->cartService->getTotal();
 
         return $this->render('cart/index.html.twig', [
             'items' => $detailedCart,
-            'total' => $total
+            'total' => $total,
+            'confirmationForm' => $form->createView()
         ]);
     }
 
@@ -111,7 +114,7 @@ class CartController extends AbstractController
         if (!$product) {
             throw $this->createNotFoundException("Le produit $id n'existe pas et ne peut pas être décrémenté !");
         }
-        
+
         $this->cartService->decrement($id);
 
         $this->addFlash("success", "Le produit a bien été décrémenté");
