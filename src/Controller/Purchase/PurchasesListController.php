@@ -4,14 +4,16 @@ namespace App\Controller\Purchase;
 
 use App\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PurchasesListController extends AbstractController
 {
+
+    // @IsGranted("ROLE_USER", message="Vous devez être connectée (sion redirection vers la page d'accueil) -> Security")
+
     /**
      * @Route("/purchases", name="purchase_index")
-     * @IsGranted("ROLE_USER", message="Vous devez être connectée (sion redirection vers la page d'accueil) -> Security")
      */
 
     public function index()
